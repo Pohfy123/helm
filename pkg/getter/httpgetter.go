@@ -69,12 +69,13 @@ func (g *HTTPGetter) get(href string) (*bytes.Buffer, error) {
 	if err != nil {
 		return buf, err
 	}
+	defer resp.Body.Close()
+
 	if resp.StatusCode != 200 {
 		return buf, errors.Errorf("failed to fetch %s : %s", href, resp.Status)
 	}
 
 	_, err = io.Copy(buf, resp.Body)
-	resp.Body.Close()
 	return buf, err
 }
 
